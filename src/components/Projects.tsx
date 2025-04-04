@@ -4,71 +4,84 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ProjectCard from './ProjectCard';
-import { Project, getProjects } from '@/lib/projects';
-import Image from 'next/image';
+import { Project } from '@/types/project';
+import { supabase } from '@/lib/supabase';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Projects = () => {
     const sectionRef = useRef<HTMLElement>(null);
+    const titleRef = useRef<HTMLHeadingElement>(null);
+    const projectsRef = useRef<HTMLDivElement>(null);
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadProjects = async () => {
-            const projectsData = await getProjects();
-            setProjects(projectsData);
-            setLoading(false);
+        const fetchProjects = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('projects')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const formattedProjects = data.map(project => ({
+                    title: project.title,
+                    description: project.description,
+                    image: project.image,
+                    technologies: project.technologies || [],
+                    githubLink: project.github_url,
+                    demoLink: project.live_url
+                }));
+
+                setProjects(formattedProjects);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des projets:', error);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        loadProjects();
+        fetchProjects();
     }, []);
 
     useEffect(() => {
-        const section = sectionRef.current;
-        if (!section) return;
+        if (!titleRef.current || !projectsRef.current) return;
 
-        const titleElement = section.querySelector('.projects-title');
-        const projectCards = section.querySelectorAll('.project-card');
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top center',
+                end: 'bottom bottom',
+            }
+        });
 
-        if (titleElement) {
-            gsap.from(titleElement, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top center',
-                    end: 'bottom center',
-                    toggleActions: 'play none none reverse'
-                },
-                y: 100,
-                opacity: 0,
-                duration: 1,
-                ease: 'power3.out'
-            });
-        }
+        tl.from(titleRef.current, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            ease: 'power3.out'
+        }).from(projectsRef.current.children, {
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'power3.out'
+        }, '-=0.5');
 
-        if (projectCards.length > 0) {
-            gsap.from(projectCards, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top center',
-                    end: 'bottom center',
-                    toggleActions: 'play none none reverse'
-                },
-                y: 50,
-                opacity: 0,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: 'power3.out'
-            });
-        }
-    }, [projects]);
+    }, []);
 
     if (loading) {
         return (
-            <section className="min-h-screen bg-black py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-                <div className="max-w-7xl mx-auto relative">
-                    <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-custom-100"></div>
+            <section id="projects" ref={sectionRef} className="relative py-20 min-h-screen">
+                <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+                <div className="container mx-auto px-4 relative z-10">
+                    <h2 ref={titleRef} className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
+                        Mes Projets
+                    </h2>
+                    <div className="flex justify-center items-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
                     </div>
                 </div>
             </section>
@@ -76,23 +89,15 @@ const Projects = () => {
     }
 
     return (
-        <section
-            ref={sectionRef}
-            id="projects"
-            className="min-h-screen bg-black py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
-        >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,rgba(0,0,0,0)_100%)]" />
-
-            <div className="max-w-7xl mx-auto relative">
-                <h2 className="projects-title text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-custom-100 to-gray-custom-300 mb-12 text-center">
+        <section id="projects" ref={sectionRef} className="relative py-20 min-h-screen">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+            <div className="container mx-auto px-4 relative z-10">
+                <h2 ref={titleRef} className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
                     Mes Projets
                 </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                    {projects.map((project) => (
-                        <div key={project.id} className="project-card">
-                            <ProjectCard {...project} />
-                        </div>
+                <div ref={projectsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {projects.map((project, index) => (
+                        <ProjectCard key={index} {...project} />
                     ))}
                 </div>
             </div>

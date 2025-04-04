@@ -1,66 +1,63 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import MazeGame from '@/components/MazeGame';
 import CrossyShooter from '@/components/CrossyShooter';
+import MazeGame from '@/components/MazeGame';
 
 export default function GamesPage() {
-    const [selectedGame, setSelectedGame] = useState<'maze' | 'shooter' | null>(null);
+    const [selectedGame, setSelectedGame] = useState<'crossy' | 'maze' | null>(null);
+    const [score, setScore] = useState(0);
+
+    const handleGameOver = (finalScore: number) => {
+        setScore(finalScore);
+        setSelectedGame(null);
+    };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4">
-            <div className="max-w-6xl mx-auto">
-                <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 mb-12 text-center">
-                    Mes Jeux
-                </h1>
+        <main className="min-h-screen bg-black text-white p-4">
+            <div className="max-w-4xl mx-auto">
+                <h1 className="text-4xl font-bold text-center mb-8">Mes Jeux</h1>
 
                 {!selectedGame ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Carte Labyrinthe 3D */}
-                        <div className="bg-gray-800/50 p-6 rounded-xl shadow-xl backdrop-blur-sm border border-white/10">
-                            <h2 className="text-2xl font-bold text-white mb-4">Labyrinthe 3D</h2>
-                            <p className="text-gray-300 mb-6">
-                                Explorez un labyrinthe en 3D et trouvez la sortie. Utilisez les flèches du clavier pour vous déplacer.
-                            </p>
-                            <button
-                                onClick={() => setSelectedGame('maze')}
-                                className="w-full py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                            >
-                                Jouer
-                            </button>
-                        </div>
-
-                        {/* Carte Crossy Shooter */}
-                        <div className="bg-gray-800/50 p-6 rounded-xl shadow-xl backdrop-blur-sm border border-white/10">
-                            <h2 className="text-2xl font-bold text-white mb-4">Crossy Shooter</h2>
-                            <p className="text-gray-300 mb-6">
-                                Évitez les obstacles et tirez pour marquer des points. Utilisez les flèches pour vous déplacer et la barre d'espace pour tirer.
-                            </p>
-                            <button
-                                onClick={() => setSelectedGame('shooter')}
-                                className="w-full py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                            >
-                                Jouer
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => setSelectedGame('crossy')}
+                            className="p-6 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+                        >
+                            <h2 className="text-2xl font-bold mb-4">Crossy Shooter</h2>
+                            <p className="text-gray-300">Un jeu de tir où vous devez éviter les obstacles et tirer sur les cibles.</p>
+                        </button>
+                        <button
+                            onClick={() => setSelectedGame('maze')}
+                            className="p-6 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+                        >
+                            <h2 className="text-2xl font-bold mb-4">Maze Game</h2>
+                            <p className="text-gray-300">Trouvez la sortie dans ce labyrinthe généré aléatoirement.</p>
+                        </button>
                     </div>
                 ) : (
-                    <div>
+                    <div className="relative">
                         <button
                             onClick={() => setSelectedGame(null)}
-                            className="mb-8 px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                            className="absolute top-4 right-4 z-10 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
                         >
-                            ← Retour aux jeux
+                            Quitter
                         </button>
+                        {selectedGame === 'crossy' && (
+                            <CrossyShooter onGameOver={handleGameOver} />
+                        )}
+                        {selectedGame === 'maze' && (
+                            <MazeGame onGameOver={handleGameOver} />
+                        )}
+                    </div>
+                )}
 
-                        <div className="bg-gray-800/50 p-6 rounded-xl shadow-xl">
-                            {selectedGame === 'maze' && <MazeGame />}
-                            {selectedGame === 'shooter' && <CrossyShooter />}
-                        </div>
+                {score > 0 && (
+                    <div className="mt-8 text-center">
+                        <p className="text-xl">Score final : {score}</p>
                     </div>
                 )}
             </div>
-        </div>
+        </main>
     );
 } 

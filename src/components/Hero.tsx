@@ -84,7 +84,7 @@ const Hero = () => {
                 </h1>
 
                 <p ref={descriptionRef} className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light">
-                    Créateur d'expériences web immersives et innovantes
+                    Créateur d&apos;expériences web immersives et innovantes
                 </p>
 
                 <div className="flex justify-center space-x-6">

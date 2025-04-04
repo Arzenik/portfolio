@@ -3,17 +3,9 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { motion } from 'framer-motion';
+import { Project } from '@/types/project';
 
-interface ProjectCardProps {
-    title: string;
-    description: string;
-    image: string;
-    technologies: string[];
-    githubUrl?: string;
-    liveUrl?: string;
-}
-
-const ProjectCard = ({ title, description, image, technologies, githubUrl, liveUrl }: ProjectCardProps) => {
+const ProjectCard = ({ title, description, image, technologies, githubLink, demoLink }: Project) => {
     const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -89,9 +81,9 @@ const ProjectCard = ({ title, description, image, technologies, githubUrl, liveU
                 </div>
 
                 <div className="flex gap-3">
-                    {githubUrl && (
+                    {githubLink && (
                         <a
-                            href={githubUrl}
+                            href={githubLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="px-4 py-2 bg-gray-custom-100/10 rounded-lg text-gray-custom-100 text-sm flex items-center gap-2 transition-colors duration-300 hover:bg-gray-custom-100/20"
@@ -102,9 +94,9 @@ const ProjectCard = ({ title, description, image, technologies, githubUrl, liveU
                             GitHub
                         </a>
                     )}
-                    {liveUrl && (
+                    {demoLink && (
                         <a
-                            href={liveUrl}
+                            href={demoLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="px-4 py-2 bg-gray-custom-100/20 rounded-lg text-gray-custom-100 text-sm flex items-center gap-2 transition-colors duration-300 hover:bg-gray-custom-100/30"
