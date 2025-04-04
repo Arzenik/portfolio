@@ -4,14 +4,16 @@ import "./globals.css";
 import LightCursor from "@/components/NeonCursor";
 import { ThemeProvider } from "@/context/ThemeContext";
 import ThemeToggle from "@/components/ThemeToggle";
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const inter = Inter({
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio - Aurélien SEBE",
-  description: "Portfolio développeur web",
+  title: "Aurélien Derouet - Portfolio",
+  description: "Portfolio de Aurélien Derouet, développeur web fullstack",
 };
 
 export default function RootLayout({
@@ -25,7 +27,9 @@ export default function RootLayout({
         <ThemeProvider>
           <LightCursor />
           <ThemeToggle />
+          <Navbar />
           {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
