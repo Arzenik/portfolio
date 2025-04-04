@@ -88,7 +88,7 @@ const Skills = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(76,29,149,0.1)_0%,rgba(0,0,0,0)_100%)]" />
 
             <div className="max-w-7xl mx-auto relative">
-                <h2 className="skills-title text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 mb-12 text-center">
+                <h2 className="skills-title text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-custom-100 to-gray-custom-300 mb-12 text-center">
                     Mes Compétences
                 </h2>
 
@@ -97,12 +97,12 @@ const Skills = () => {
                         {skills.map((skill, index) => (
                             <div key={index} className="space-y-2">
                                 <div className="flex justify-between">
-                                    <span className="text-white font-medium">{skill.name}</span>
-                                    <span className="text-gray-400">{skill.level}%</span>
+                                    <span className="text-gray-custom-100 font-medium">{skill.name}</span>
+                                    <span className="text-gray-custom-400">{skill.level}%</span>
                                 </div>
-                                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div className="h-2 bg-gray-custom-100/10 rounded-full overflow-hidden">
                                     <div
-                                        className="skill-bar h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                                        className="skill-bar h-full bg-gradient-to-r from-gray-custom-100 to-gray-custom-300 rounded-full"
                                         style={{ width: `${skill.level}%` }}
                                     />
                                 </div>

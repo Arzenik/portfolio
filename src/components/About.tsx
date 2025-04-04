@@ -55,30 +55,30 @@ const About = () => {
             className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8"
         >
             <div className="max-w-7xl mx-auto">
-                <h2 className="about-title text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 mb-12 text-center">
+                <h2 className="about-title text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-custom-100 to-gray-custom-300 mb-12 text-center">
                     À Propos de Moi
                 </h2>
 
                 <div className="about-content grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div className="space-y-6">
-                        <p className="text-gray-300 text-lg leading-relaxed">
+                        <p className="text-gray-custom-100 text-lg leading-relaxed">
                             Passionné par le développement web et les nouvelles technologies, je crée des expériences numériques uniques et immersives.
                         </p>
-                        <p className="text-gray-300 text-lg leading-relaxed">
+                        <p className="text-gray-custom-100 text-lg leading-relaxed">
                             Mon approche combine créativité et expertise technique pour donner vie à des projets innovants.
                         </p>
                         <div className="flex gap-4">
-                            <button className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-medium hover:opacity-90 transition-opacity">
+                            <button className="px-6 py-3 bg-gradient-to-r from-gray-custom-100 to-gray-custom-300 rounded-full text-gray-custom-900 font-medium hover:opacity-90 transition-opacity">
                                 Voir mes projets
                             </button>
-                            <button className="px-6 py-3 border border-white/20 rounded-full text-white font-medium hover:bg-white/10 transition-colors">
+                            <button className="px-6 py-3 border border-gray-custom-100/20 rounded-full text-gray-custom-100 font-medium hover:bg-gray-custom-100/10 transition-colors">
                                 Me contacter
                             </button>
                         </div>
                     </div>
 
                     <div className="relative h-[400px] rounded-lg overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-custom-100/20 to-gray-custom-300/20" />
                         {/* Ici, vous pourrez ajouter une image ou un élément 3D */}
                     </div>
                 </div>
