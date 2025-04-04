@@ -2,87 +2,118 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import ThemeToggle from './ThemeToggle';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Navbar = () => {
-    const navRef = useRef(null);
+    const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navbarRef = useRef<HTMLElement>(null);
+    const pathname = usePathname();
 
     useEffect(() => {
-        gsap.from(navRef.current, {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        if (!navbarRef.current) return;
+
+        gsap.from(navbarRef.current, {
             y: -100,
             opacity: 0,
             duration: 1,
-            ease: "power3.out"
+            ease: 'power3.out',
         });
     }, []);
 
+    const navLinks = [
+        { href: '/', label: 'Accueil' },
+        { href: '/about', label: 'À propos' },
+        { href: '/projects', label: 'Projets' },
+        { href: '/games', label: 'Jeux' },
+        { href: '/contact', label: 'Contact' },
+    ];
+
     return (
         <nav
-            ref={navRef}
-            className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md border-b border-white/10"
+            ref={navbarRef}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black/80 backdrop-blur-md' : 'bg-transparent'
+                }`}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     <Link href="/" className="text-white text-xl font-bold">
-                        Portfolio
+                        AD
                     </Link>
 
-                    {/* Navigation desktop */}
-                    <div className="hidden md:block">
-                        <div className="flex items-center space-x-8">
-                            <Link href="#about" className="text-gray-300 hover:text-white transition-colors">
-                                À propos
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center space-x-8">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className={`text-white/60 hover:text-white transition-colors ${pathname === link.href ? 'text-white' : ''
+                                    }`}
+                            >
+                                {link.label}
                             </Link>
-                            <Link href="#projects" className="text-gray-300 hover:text-white transition-colors">
-                                Projets
-                            </Link>
-                            <Link href="/games" className="text-gray-300 hover:text-white transition-colors">
-                                Jeux
-                            </Link>
-                            <Link href="#skills" className="text-gray-300 hover:text-white transition-colors">
-                                Compétences
-                            </Link>
-                            <Link href="#contact" className="text-gray-300 hover:text-white transition-colors">
-                                Contact
-                            </Link>
-                        </div>
+                        ))}
+                        <ThemeToggle />
                     </div>
 
-                    {/* Bouton menu mobile */}
+                    {/* Mobile Menu Button */}
                     <button
                         className="md:hidden text-white"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
-                        <span className="sr-only">Menu</span>
-                        <div className="w-6 h-6 flex flex-col justify-center space-y-1.5">
-                            <span className={`block w-full h-0.5 bg-white transform transition-transform ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                            <span className={`block w-full h-0.5 bg-white transition-opacity ${isMenuOpen ? 'opacity-0' : ''}`} />
-                            <span className={`block w-full h-0.5 bg-white transform transition-transform ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-                        </div>
+                        <svg
+                            className="w-6 h-6"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            {isMenuOpen ? (
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            ) : (
+                                <path d="M4 6h16M4 12h16M4 18h16" />
+                            )}
+                        </svg>
                     </button>
                 </div>
 
-                {/* Menu mobile */}
-                <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} py-2`}>
-                    <div className="flex flex-col space-y-2">
-                        <Link href="#about" className="text-gray-300 hover:text-white transition-colors px-4 py-2">
-                            À propos
-                        </Link>
-                        <Link href="#projects" className="text-gray-300 hover:text-white transition-colors px-4 py-2">
-                            Projets
-                        </Link>
-                        <Link href="/games" className="text-gray-300 hover:text-white transition-colors px-4 py-2">
-                            Jeux
-                        </Link>
-                        <Link href="#skills" className="text-gray-300 hover:text-white transition-colors px-4 py-2">
-                            Compétences
-                        </Link>
-                        <Link href="#contact" className="text-gray-300 hover:text-white transition-colors px-4 py-2">
-                            Contact
-                        </Link>
+                {/* Mobile Navigation */}
+                {isMenuOpen && (
+                    <div className="md:hidden py-4">
+                        <div className="flex flex-col space-y-4">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`text-white/60 hover:text-white transition-colors ${pathname === link.href ? 'text-white' : ''
+                                        }`}
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
+                            <div className="pt-4">
+                                <ThemeToggle />
+                            </div>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </nav>
     );

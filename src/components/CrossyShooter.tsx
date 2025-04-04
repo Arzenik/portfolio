@@ -16,12 +16,12 @@ const CrossyShooter = ({ onGameOver }: GameProps) => {
     const [obstacles, setObstacles] = useState<Array<{ x: number; y: number }>>([]);
     const gameLoopRef = useRef<number>(0);
 
-    const handleShoot = () => {
-        if (gameOver) return;
-        setBullets(prev => [...prev, { x: playerPosition.x, y: playerPosition.y, direction: 'up' }]);
-    };
-
     useEffect(() => {
+        const handleShoot = () => {
+            if (gameOver) return;
+            setBullets(prev => [...prev, { x: playerPosition.x, y: playerPosition.y, direction: 'up' }]);
+        };
+
         const handleKeyDown = (e: KeyboardEvent) => {
             if (gameOver) return;
 
@@ -52,7 +52,7 @@ const CrossyShooter = ({ onGameOver }: GameProps) => {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [playerPosition, gameOver, handleShoot]);
+    }, [playerPosition, gameOver]);
 
     useEffect(() => {
         const spawnObstacle = () => {
